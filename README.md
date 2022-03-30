@@ -11,7 +11,7 @@ Link to kaggle competition: https://www.kaggle.com/c/data-science-for-good-caree
 "CareerVillage.org is a nonprofit that crowdsources career advice for underserved youth. Founded in 2011 in four classrooms in New York City, the platform has now served career advice from 25,000 volunteer professionals to over 3.5M online learners. The platform uses a Q&A style similar to StackOverflow or Quora to provide students with answers to any question about any career.
 "In this Data Science for Good challenge, CareerVillage.org, in partnership with Google.org, is inviting you to help **recommend questions to appropriate volunteers**. To support this challenge, CareerVillage.org has supplied five years of data." [1] *emphasis added*
 
-<span style="color:red">I think you adjusted the problem statement from a recommender of questions to volunteers, to prompting students with words that are more likely to help them get their questions answered, correct?</span>
+<span style="color:red">I think you adjusted the problem statement from a recommender of questions to volunteers, to prompting students with words that are more likely to help them get their questions answered, correct? Let's adjust that in the problem statement as well then... that way we don't confuse our readers XD</span>
 
 ## The Data
 
@@ -37,7 +37,9 @@ As quoted from the Kaggle competition site:
 
 [1]
 
-## Results
+## Results/Abstract
+
+<span style="color:red">I was thinking to include a "results" or "abstract" section so that we can quickly get to the point of the matter - this is kind of like an employer's first look at what your business presentations will be like, and generally we put a short descriptioin of what was observed and where we're headed in the report. This can be combined with the problem statement section.</span>
 
 ## Modeling Prep
 
