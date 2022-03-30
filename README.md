@@ -7,9 +7,9 @@ Link to kaggle competition: https://www.kaggle.com/c/data-science-for-good-caree
 # Problem Statement
 
 "CareerVillage.org is a nonprofit that crowdsources career advice for underserved youth. Founded in 2011 in four classrooms in New York City, the platform has now served career advice from 25,000 volunteer professionals to over 3.5M online learners. The platform uses a Q&A style similar to StackOverflow or Quora to provide students with answers to any question about any career.
-"In this Data Science for Good challenge, CareerVillage.org, in partnership with Google.org, is inviting you to help recommend questions to appropriate volunteers. To support this challenge, CareerVillage.org has supplied five years of data." [1]
+"In this Data Science for Good challenge, CareerVillage.org, in partnership with Google.org, is inviting you to help **recommend questions to appropriate volunteers**. To support this challenge, CareerVillage.org has supplied five years of data." [1] emphasis added
 
-
+<span style="color:red">I think you adjusted the problem statement from a recommender of questions to volunteers, to prompting students with words that are more likely to help them get their questions answered, correct?</span>
 
 # The Data
 
@@ -35,48 +35,9 @@ As quoted from the Kaggle competition site:
 
 [1]
 
+# Results
 
 
-# Modeling
-
-(For reference on how I prepared the data for modeling, see section on [Modeling Prep](#Modeling-Prep))
-
-## Predicting If the Question Was Answered
-
-## Baseline Accuracy
-
-Since most of the questions are answered, the classes are highly unbalanced with a 98% Baseline Accuracy Score.
-
-<span style="color:red">what does un-balanced mean? which data did you model for the Baseline Accuracy Score?</span> 
-
-### Unsampled Data
-<span style="color:red">plots? why do Logistic Regression first, and on what data?</span> 
-
-For the first model, I grid-searched over Logistic Regression and began a K-Nearest Neighbors but after 8 hrs I terminated the K-Nearest Neighbors kernel in favor of Logistic Regression, which already provided 99% test accuracy (baseline of 98%). 
-
-### Sampled Data
-To better understand the impact of how the question was asked, I built a model to see how well I could predict if the question was answered. In this notebook, I grid-search over two sampled dataframes with several models.
-
-In the unsampled model from the previous notebook, I grid-search over the whole data frame using `questions_body` and `questions_score` as features. Since the classes were highly unbalanced, 98% baseline score, I decided to sample the data to even out the classes testing to see if I can predict if a question was answered. In the second dataframe, there was the sampled data set, with only `questions_body` as a feature, since I hypothesized that `question_score` was a strong indicator if the question was answered. 
-
-For the first dataframe, I grid-search over Logistic Regression, K-Nearest Neighbors, and Random Forest, with Random Forest Providing the Best Results. 
-
-In the second dataframe I only used Logicstic Regression due to time. 
-
-### Sampling the Data In Order to Create Even Classes
-
-Since the classes above are so unbalanced I'm only taking a sample of the data were the question was answered. This creates a new baseline accuracy of 53% so we can actually model and test how much impact our features have on being able to predict if the question is answered or not (if we balance the classes the model could just predict was answered every time and would be 98% correct).
-
-### Confusion Matrix
-
-A confusion matrix provides evaluation metrics that highlight how the model is being accurate and erroneous. The confusion matrix below shows scores from the Random Forest Model which had the best prediction results.
-
-After successfully modeling if a question will be answered or not based on question body and score, I wanted to know how we could predict just on question body since score was a likely tell. Below I modeled using a pipeline and grid-searching with logistic regression. Keep in mind, the below is with the sampled data and balanced classes.
-
-#### Words Most Indicative To The Question Being Answered.
-Below I set up and output a dataframe with the coefficients (words most indicative to questions being answered or not answered)
-
-Recommendations
 
 # Modeling Prep
 
@@ -169,6 +130,47 @@ Creating a column called `time_to_answer` that is a calculation of the `answers_
 [insert time]
 
 General stats for how long it takes for a question to be answered. As we can see here that the mean is 142 days, while the median is 22 days. The average is heavily skewed by the max amount of days it took to answer a question; 2,562, which is about 7 years. This is highly suspicious that a question took 7 years to be answered. Additionally, the min is negative, and an answer to a question can't be posted before it was asked. Since the data was likely auto-generated from the site, it's unlikely it's an imputation error. It may be a merging error due to how messy the data has been in general. The other possibility is that if an answer was posted for a different similar question, it might be linked to the new question (this would have to be confirmed by careervillage.com).
+
+# Modeling
+
+(For reference on how I prepared the data for modeling, see section on [Modeling Prep](#Modeling-Prep))
+
+## Predicting If the Question Was Answered
+
+## Baseline Accuracy
+
+Since most of the questions are answered, the classes are highly unbalanced with a 98% Baseline Accuracy Score.
+
+<span style="color:red">what does un-balanced mean? which data did you model for the Baseline Accuracy Score?</span> 
+
+### Unsampled Data
+<span style="color:red">plots? why do Logistic Regression first, and on what data?</span> 
+
+For the first model, I grid-searched over Logistic Regression and began a K-Nearest Neighbors but after 8 hrs I terminated the K-Nearest Neighbors kernel in favor of Logistic Regression, which already provided 99% test accuracy (baseline of 98%). 
+
+### Sampled Data
+To better understand the impact of how the question was asked, I built a model to see how well I could predict if the question was answered. In this notebook, I grid-search over two sampled dataframes with several models.
+
+In the unsampled model from the previous notebook, I grid-search over the whole data frame using `questions_body` and `questions_score` as features. Since the classes were highly unbalanced, 98% baseline score, I decided to sample the data to even out the classes testing to see if I can predict if a question was answered. In the second dataframe, there was the sampled data set, with only `questions_body` as a feature, since I hypothesized that `question_score` was a strong indicator if the question was answered. 
+
+For the first dataframe, I grid-search over Logistic Regression, K-Nearest Neighbors, and Random Forest, with Random Forest Providing the Best Results. 
+
+In the second dataframe I only used Logicstic Regression due to time. 
+
+### Sampling the Data In Order to Create Even Classes
+
+Since the classes above are so unbalanced I'm only taking a sample of the data were the question was answered. This creates a new baseline accuracy of 53% so we can actually model and test how much impact our features have on being able to predict if the question is answered or not (if we balance the classes the model could just predict was answered every time and would be 98% correct).
+
+### Confusion Matrix
+
+A confusion matrix provides evaluation metrics that highlight how the model is being accurate and erroneous. The confusion matrix below shows scores from the Random Forest Model which had the best prediction results.
+
+After successfully modeling if a question will be answered or not based on question body and score, I wanted to know how we could predict just on question body since score was a likely tell. Below I modeled using a pipeline and grid-searching with logistic regression. Keep in mind, the below is with the sampled data and balanced classes.
+
+#### Words Most Indicative To The Question Being Answered.
+Below I set up and output a dataframe with the coefficients (words most indicative to questions being answered or not answered)
+
+Recommendations
 
 # References
 
