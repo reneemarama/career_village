@@ -1,3 +1,5 @@
+# Career Village Recommender
+
 This is all annotations from my jupyter notebooks (excluding some very code specific explanations)
 
 Link to kaggle competition: https://www.kaggle.com/c/data-science-for-good-careervillage
@@ -7,7 +9,7 @@ Link to kaggle competition: https://www.kaggle.com/c/data-science-for-good-caree
 # Problem Statement
 
 "CareerVillage.org is a nonprofit that crowdsources career advice for underserved youth. Founded in 2011 in four classrooms in New York City, the platform has now served career advice from 25,000 volunteer professionals to over 3.5M online learners. The platform uses a Q&A style similar to StackOverflow or Quora to provide students with answers to any question about any career.
-"In this Data Science for Good challenge, CareerVillage.org, in partnership with Google.org, is inviting you to help **recommend questions to appropriate volunteers**. To support this challenge, CareerVillage.org has supplied five years of data." [1] emphasis added
+"In this Data Science for Good challenge, CareerVillage.org, in partnership with Google.org, is inviting you to help **recommend questions to appropriate volunteers**. To support this challenge, CareerVillage.org has supplied five years of data." [1] *emphasis added*
 
 <span style="color:red">I think you adjusted the problem statement from a recommender of questions to volunteers, to prompting students with words that are more likely to help them get their questions answered, correct?</span>
 
@@ -37,37 +39,35 @@ As quoted from the Kaggle competition site:
 
 # Results
 
-
-
 # Modeling Prep
 
-For the career village recommender system, we were given 15 CSV's to work with. To make future processing easier and to find significant relationships, merging relevant dataframes. After opening and playing around with the dataframes I realized that merging them wouldn't be as simple as I had hoped. The dataframes don't line up well, and when merging I'd either lose or make up information. I used several different merges of the dataframes to tell the story of the careerVillage data story. 
+For the career village recommender system, we were given 15 CSV's to work with. To make future processing easier and to find significant relationships, merging relevant dataframes. After opening and playing around with the dataframes I realized that merging them wouldn't be as simple as I had hoped. The dataframes don't line up well, and when merging I'd either lose or make up information. I used several different merges of the dataframes to tell the story of the careerVillage data story.
 
 For general cleaning, EDA, and modeling I merged:
 
-* answers.csv
-* answer_scores.csv
-* question_scores.csv
-* questions.csv
-* tag_questions.csv
-* tags.csv
-* professionals.csv
+- answers.csv
+- answer_scores.csv
+- question_scores.csv
+- questions.csv
+- tag_questions.csv
+- tags.csv
+- professionals.csv
 
 Other ways I merged the data
 
 ## Unused CSV's
 
-Given limited time, I only worked with 7/15 notebooks. 
+Given limited time, I only worked with 7/15 notebooks.
 
 ## Cleaning
 
 Before conducting EDA and modeling, the data needed to be formatted in a way that won't throw errors. In a combination of initial exploration and later EDA the following steps are needed:
 
-1. Create Boolean Columns 
+1. Create Boolean Columns
 2. Converting to Appropriate Data Type
 3. Handling Nulls
 4. Cleaning Text - NLP
-5. Handling Duplicate Values Left Over from Merging 
+5. Handling Duplicate Values Left Over from Merging
 
 ## Creating a "Was Answered" Column
 
@@ -78,11 +78,11 @@ Creating a column called `was_answered`, to indicate if the question was answere
 An initial look at `was_answered` stats shows that the majority of questions are answered.
 [insert]
 
-We can see that the average question score for where questions weren't answered was 0.75 and when answered 4.9 (the highest score is 125, with most between 0-10). The scores work similar to "upvotes" or "likes", 0 means 0 "upvotes", 5 means 5 "upvotes" etc. This intuitively makes sense, because questions with low or no upvotes are likely to go unanswered. 
+We can see that the average question score for where questions weren't answered was 0.75 and when answered 4.9 (the highest score is 125, with most between 0-10). The scores work similar to "upvotes" or "likes", 0 means 0 "upvotes", 5 means 5 "upvotes" etc. This intuitively makes sense, because questions with low or no upvotes are likely to go unanswered.
 
-An interesting thing to note is that the average answers_score is 0.45. Since it uses the same scale as above it looks like the majority of answers aren't getting "upvotes". 
+An interesting thing to note is that the average answers_score is 0.45. Since it uses the same scale as above it looks like the majority of answers aren't getting "upvotes".
 
-In the NLP EDA notebook, I calculated the 'sentiment score' of the questions and answers body. I did this using the Natural Language Toolkit (NLTK) library. The sentiment score parses through the text and awards words a positive or negative score. Words like "like'', "love" or "happy" etc. are attributed to a positive score while "dislike" or "annoyed" etc. are given negative scores. Words like "the '', "it" etc. are considered neutral. NLTK then aggregates a score based on all the words in each passage. Though this is an imperfect approach (i.e. attributing a positive score to "don't like'' or the reverse), it provides a general understanding of the tone of the text. 
+In the NLP EDA notebook, I calculated the 'sentiment score' of the questions and answers body. I did this using the Natural Language Toolkit (NLTK) library. The sentiment score parses through the text and awards words a positive or negative score. Words like "like'', "love" or "happy" etc. are attributed to a positive score while "dislike" or "annoyed" etc. are given negative scores. Words like "the '', "it" etc. are considered neutral. NLTK then aggregates a score based on all the words in each passage. Though this is an imperfect approach (i.e. attributing a positive score to "don't like'' or the reverse), it provides a general understanding of the tone of the text.
 
 In the graph below, grouped by 'was_answered', one can see that the average questions_score is relatively similar for questions that were answered and were not answered. Since not all the questions are answered, there are all 0's in the `answers_sentiment` score where `was_answered` is 0.
 
@@ -90,7 +90,7 @@ In the graph below, grouped by 'was_answered', one can see that the average ques
 
 **The scores range from -1 to 1.** With 1 being positive, -1: negative.
 
-## Distribution of Answers Sentiment Scores:
+## Distribution of Answers Sentiment Scores
 
 The majority of `answers_sentiment` scores are close to 1, with a small bump just below 0. This is good and expected; the point of the platform is to empower and serve youth by answering their career questions. Negative sentiment scores would indicate that the professionals on the platform are not answering kindly, and should be flagged for investigation and possible removal from the platform. That said, humans are much better at dyshering tone from the text, and should be reviewed manually or with further analysis before any action is taken.
 
@@ -105,7 +105,6 @@ We wanted to know more about who's answering the questions. Below we're looking 
 The total number of unique authors is 10,169.
 [insert]
 
-
 Professionals average answer score. Below are a few graphs that look top average `answers_score`.
 
 319 out of 10169 professionals have an `answers_score` above 2.0
@@ -113,14 +112,13 @@ Professionals average answer score. Below are a few graphs that look top average
 
 ### Exploring Scores
 
-Below is a look at the general stats, grouped by `was_answered` for question and answer scores. Unsurprisingly the average question score for questions that were answered is several points higher than wasn't answered. That said, it's interesting to see that the average score for questions that weren't answered was above 0, or almost zero. In looking at the max `question_score` for questions that weren't answered, we see a question had 123 "upvotes" and still wasn't answered. This is an anomaly, but interesting. 
+Below is a look at the general stats, grouped by `was_answered` for question and answer scores. Unsurprisingly the average question score for questions that were answered is several points higher than wasn't answered. That said, it's interesting to see that the average score for questions that weren't answered was above 0, or almost zero. In looking at the max `question_score` for questions that weren't answered, we see a question had 123 "upvotes" and still wasn't answered. This is an anomaly, but interesting.
 
-#### General Stats for Question and Answer Scores:
-
+#### General Stats for Question and Answer Scores
 
 The boxplot provides a good visual for how the answer scores and spread. The majority of scores are between 0 and 1. With outliers above about 2. Since there can't be negative scores, there are no outliers to the left of the graph.
 
-The boxplot provides a good visual for how the question scores and spread. The majority of scores are between 2 and 4. With outliers above about 9. There are 75 unique question scores. 
+The boxplot provides a good visual for how the question scores and spread. The majority of scores are between 2 and 4. With outliers above about 9. There are 75 unique question scores.
 
 [inset]
 
@@ -141,21 +139,23 @@ General stats for how long it takes for a question to be answered. As we can see
 
 Since most of the questions are answered, the classes are highly unbalanced with a 98% Baseline Accuracy Score.
 
-<span style="color:red">what does un-balanced mean? which data did you model for the Baseline Accuracy Score?</span> 
+<span style="color:red">what does un-balanced mean? which data did you model for the Baseline Accuracy Score?</span>
 
 ### Unsampled Data
-<span style="color:red">plots? why do Logistic Regression first, and on what data?</span> 
 
-For the first model, I grid-searched over Logistic Regression and began a K-Nearest Neighbors but after 8 hrs I terminated the K-Nearest Neighbors kernel in favor of Logistic Regression, which already provided 99% test accuracy (baseline of 98%). 
+<span style="color:red">plots? why do Logistic Regression first, and on what data?</span>
+
+For the first model, I grid-searched over Logistic Regression and began a K-Nearest Neighbors but after 8 hrs I terminated the K-Nearest Neighbors kernel in favor of Logistic Regression, which already provided 99% test accuracy (baseline of 98%).
 
 ### Sampled Data
+
 To better understand the impact of how the question was asked, I built a model to see how well I could predict if the question was answered. In this notebook, I grid-search over two sampled dataframes with several models.
 
-In the unsampled model from the previous notebook, I grid-search over the whole data frame using `questions_body` and `questions_score` as features. Since the classes were highly unbalanced, 98% baseline score, I decided to sample the data to even out the classes testing to see if I can predict if a question was answered. In the second dataframe, there was the sampled data set, with only `questions_body` as a feature, since I hypothesized that `question_score` was a strong indicator if the question was answered. 
+In the unsampled model from the previous notebook, I grid-search over the whole data frame using `questions_body` and `questions_score` as features. Since the classes were highly unbalanced, 98% baseline score, I decided to sample the data to even out the classes testing to see if I can predict if a question was answered. In the second dataframe, there was the sampled data set, with only `questions_body` as a feature, since I hypothesized that `question_score` was a strong indicator if the question was answered.
 
-For the first dataframe, I grid-search over Logistic Regression, K-Nearest Neighbors, and Random Forest, with Random Forest Providing the Best Results. 
+For the first dataframe, I grid-search over Logistic Regression, K-Nearest Neighbors, and Random Forest, with Random Forest Providing the Best Results.
 
-In the second dataframe I only used Logicstic Regression due to time. 
+In the second dataframe I only used Logicstic Regression due to time.
 
 ### Sampling the Data In Order to Create Even Classes
 
@@ -168,29 +168,11 @@ A confusion matrix provides evaluation metrics that highlight how the model is b
 After successfully modeling if a question will be answered or not based on question body and score, I wanted to know how we could predict just on question body since score was a likely tell. Below I modeled using a pipeline and grid-searching with logistic regression. Keep in mind, the below is with the sampled data and balanced classes.
 
 #### Words Most Indicative To The Question Being Answered.
+
 Below I set up and output a dataframe with the coefficients (words most indicative to questions being answered or not answered)
 
 Recommendations
 
 # References
 
-1. *Data Science for good: Careervillage.org*. Kaggle. (n.d.). Retrieved March 2, 2020, from https://www.kaggle.com/competitions/data-science-for-good-careervillage/overview 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+1. *Data Science for good: Careervillage.org*. Kaggle. (n.d.). Retrieved March 2, 2020, from https://www.kaggle.com/competitions/data-science-for-good-careervillage/overview
