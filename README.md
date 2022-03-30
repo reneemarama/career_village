@@ -45,10 +45,14 @@ As quoted from the Kaggle competition site:
 
 ## Baseline Accuracy
 
-Since most of the questions are answered the classes are highly unbalanced with 98% Baseline Accuracy Score
+Since most of the questions are answered, the classes are highly unbalanced with a 98% Baseline Accuracy Score.
+
+<span style="color:red">what does un-balanced mean? which data did you model for the Baseline Accuracy Score?</span> 
 
 ### Unsampled Data
-For the first model, I grid-searched over Logistic Regression and began a K-Nearest Neighbors but after about 8 hrs I terminated the kernel - especially because Logistic Regression was providing 99% test accuracy (baseline of 98%). 
+<span style="color:red">plots? why do Logistic Regression first, and on what data?</span> 
+
+For the first model, I grid-searched over Logistic Regression and began a K-Nearest Neighbors but after 8 hrs I terminated the K-Nearest Neighbors kernel in favor of Logistic Regression, which already provided 99% test accuracy (baseline of 98%). 
 
 ### Sampled Data
 To better understand the impact of how the question was asked, I built a model to see how well I could predict if the question was answered. In this notebook, I grid-search over two sampled dataframes with several models.
