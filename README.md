@@ -43,7 +43,7 @@ As quoted from the Kaggle competition site:
 
 ## Modeling Prep
 
-For the career village recommender system, we were given 15 CSV's to work with. To make future processing easier and to find significant relationships, merging relevant dataframes. After opening and playing around with the dataframes I realized that merging them wouldn't be as simple as I had hoped. The dataframes don't line up well, and when merging I'd either lose or make up information. I used several different merges of the dataframes to tell the story of the careerVillage data story.
+For the career village recommender system, we were given 15 CSV's to work with. To make future processing easier and to find significant relationships, I merged relevant dataframes. After opening and playing around with the dataframes I realized that merging them wouldn't be as simple as I had hoped. The dataframes don't line up well, and when merging I'd either lose or make up information. I used several different merges of the dataframes to tell the story of the careerVillage data story.
 
 For general cleaning, EDA, and modeling I merged:
 
