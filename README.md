@@ -9,7 +9,7 @@ Link to kaggle competition: https://www.kaggle.com/c/data-science-for-good-caree
 "CareerVillage.org is a nonprofit that crowdsources career advice for underserved youth. Founded in 2011 in four classrooms in New York City, the platform has now served career advice from 25,000 volunteer professionals to over 3.5M online learners. The platform uses a Q&A style similar to StackOverflow or Quora to provide students with answers to any question about any career.
 "In this Data Science for Good challenge, CareerVillage.org, in partnership with Google.org, is inviting you to help recommend questions to appropriate volunteers. To support this challenge, CareerVillage.org has supplied five years of data." [1]
 
-Due to a lack of time, I strayed from the original problem statement and instead focused on developing a model to **prompt students with words that are more likely to help them get their questions answered**.
+Due to a lack of time, I did not compete for the original problem statement and instead focused on developing a model to **prompt students with words that are more likely to help them get their questions answered**.
 
 ## The Data
 
@@ -51,7 +51,7 @@ Two models were created, one from un-sampled raw data (the whole data set) and o
 
 ### Top 100 words correlated with answered questions
 
-#TODO insert a table of the top 100 words
+#TODO insert a table of the top 100 words generated from the Raw Data Random Forest model
 
 
 
@@ -59,7 +59,11 @@ Two models were created, one from un-sampled raw data (the whole data set) and o
 
 ### Merging Data
 
-For the career village recommender system, we were given 15 CSV's to work with. To make future processing easier and to find significant relationships, I merged dataframes with information germane to my analysis effort. After opening and playing around with the dataframes I realized that merging them would not be as simple as originally hoped. The dataframes do not line up 1-1, and when merging multiple dataframes I would either lose or duplicate information. 
+<img src=".\Plots\join_methods.png" alt="join methods" width="600" style="float: middle;"/>
+
+For the career village recommender system, we are given 15 CSV's to work with. To make future processing easier and to find significant relationships, I merged datasets with information germane to my analysis effort. After opening and playing around with the datasets I realized that merging them would not be as simple as originally hoped. The datasets do not line up 1-1, and when merging multiple datasets I would either lose or duplicate information. 
+
+After much consternation over how I could merge the disparate datasets, I was eventually able to combine datasets in various configurations. The combinations usually did not contain more than two types of data (e.g. questions + answers), or I was able to add a parameter representative of additional datasets for my desired analysis.
 
 For general cleaning, EDA, and modeling I merged, in various combinations:
 
@@ -69,11 +73,30 @@ For general cleaning, EDA, and modeling I merged, in various combinations:
 - questions.csv
 - tag_questions.csv
 - tags.csv
-- professionals.csv
 
 ### Cleaning
 
+#TODO : insert image of sweeping broom
+
+Before conducting EDA and building a model the data needed to be formatted in a way that would not produce errors during the analysis. In a combination of initial exploration and later EDA the following steps were needed:
+
+1. Converting to Appropriate Datatype
+2. Sorting Data
+   1. defining data types for numerical analysis and textual cleaning
+3. Handling Nulls
+4. Cleaning Text of HTLM artifacts
+
+Cleaning of the data was performed in two iterations. The first iteration supported initial EDA and modeling, and the second iteration implemented lessons learned from the first dataframe. Specifically, during the second iteration of cleaning I merged the data so that I did not have any duplicates. This involved removing the text contributed from the answers and tags and applying a simple "was_answered" and "has_tag" flag to the questions. I was unable to perform more complex analysis due to the dimensional reduction of our dataframe in this case, but time was rather limited anyway and the resulting analysis sufficed.
+
 ### EDA
+
+This was some of the more interesting work!
+
+The journey starts off in the NLP EDA notebook with some general EDA to get a sense of the distributions among the numerical data. The histograms unfortunately provided no guidance on where our analysis should proceed.
+
+#TODO insert picture of histograms. should probably clean up the histograms first though, they are rather overlapped as shown now in the 3a_NLP_EDA notebook.
+
+Then, since we are dealing with questions and answers, I thought it would be useful to investigate how the sentiment of text impacted the probability of being answered. To this end, I called the SentimentIntensityAnalyzer() from the Natural Language Toolkit (NLTK) to create sentiment scores for each question and answer.
 
 ## Modeling
 
