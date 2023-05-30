@@ -120,7 +120,7 @@ Another thing I did was look more closely into the histograms of the scores, sin
 
 <img src=".\Plots\3a_questions_score_hist.png" alt="join methods" width="600" style="float: middle;"/>
 
-#### Correlation of Numerical Columns with Questions Getting Answered
+#### Correlation to Questions Getting Answered
 
 Finally, I looked at the [Pearson coefficients](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) (normalized covariance, looking at how the respective variables relate to `was_answered`). Unfortunately there was only a small amount of correlation and so further modeling using the question sentiment or other numerical variables for prediction was not pursued. Using `answers_sentiment` was a predictor is a non-starter since the only way for an answer to have a sentiment is for it to be answered in the first place.
 
@@ -128,11 +128,21 @@ Finally, I looked at the [Pearson coefficients](https://en.wikipedia.org/wiki/Pe
 
 *Fig. xx Pearson Coefficients of the numerical data w.r.t. questions getting answered*
 
+Further Investigation into scores
+
+Looking at distribution of time it takes to answer
+
+Tag EDA
+
+- did not end up being very helpful...
+
 
 
 ## Modeling
 
+un-sampled modeling
 
+sampled modeling
 
 ### Cleaning
 
