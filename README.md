@@ -90,13 +90,45 @@ Cleaning of the data was performed in two iterations. The first iteration suppor
 
 ### EDA
 
+#### General Inspection
+
 This was some of the more interesting work!
 
-The journey starts off in the NLP EDA notebook with some general EDA to get a sense of the distributions among the numerical data. The histograms unfortunately provided no guidance on where our analysis should proceed.
+The journey starts off in the NLP EDA notebook with some general EDA to get a sense of the distributions among the numerical data. The histograms unfortunately provided little guidance on where our analysis should proceed.
 
-#TODO insert picture of histograms. should probably clean up the histograms first though, they are rather overlapped as shown now in the 3a_NLP_EDA notebook.
+<img src=".\Plots\3a_initial_hist_answered.png" alt="join methods" width="600" style="float: middle;"/>
 
-Then, since we are dealing with questions and answers, I thought it would be useful to investigate how the sentiment of text impacted the probability of being answered. To this end, I called the SentimentIntensityAnalyzer() from the Natural Language Toolkit (NLTK) to create sentiment scores for each question and answer.
+*Fig. xx histograms of numerical columns for questions that have been answered*
+
+#### NLP EDA
+
+Then, since we are dealing with questions and answers, I thought it would be useful to investigate how the sentiment of each question impacted the probability of being answered. To this end, I called the SentimentIntensityAnalyzer() from the Natural Language Toolkit (NLTK) to create sentiment scores for each question and answer. 
+
+<img src=".\Plots\3a_answers_sentiment_hist.png" alt="join methods" width="600" style="float: middle;"/>
+
+<img src=".\Plots\3a_questions_sentiment_hist_answered.png" alt="join methods" width="600" style="float: middle;"/>
+
+
+
+<img src=".\Plots\3a_questions_sentiment_hist_answered_not.png" alt="join methods" width="600" style="float: middle;"/>
+
+#### A Closer Look at Question and Answer Score Distributions
+
+Another thing I did was look more closely into the histograms of the scores, since there was a more granular way to represent the data:
+
+<img src=".\Plots\3a_answers_score_hist.png" alt="join methods" width="600" style="float: middle;"/>
+
+<img src=".\Plots\3a_questions_score_hist.png" alt="join methods" width="600" style="float: middle;"/>
+
+#### Correlation of Numerical Columns with Questions Getting Answered
+
+Finally, I looked at the [Pearson coefficients](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) (normalized covariance, looking at how the respective variables relate to `was_answered`). Unfortunately there was only a small amount of correlation and so further modeling using the question sentiment or other numerical variables for prediction was not pursued. Using `answers_sentiment` was a predictor is a non-starter since the only way for an answer to have a sentiment is for it to be answered in the first place.
+
+<img src=".\Plots\3a_correlation_numerical_data.png" alt="join methods" width="600" style="float: middle;"/>
+
+*Fig. xx Pearson Coefficients of the numerical data w.r.t. questions getting answered*
+
+
 
 ## Modeling
 
