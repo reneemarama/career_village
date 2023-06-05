@@ -100,17 +100,19 @@ The journey starts off in the NLP EDA notebook with some general EDA to get a se
 
 *Fig. xx histograms of numerical columns for questions that have been answered*
 
+#TODO : look into auto-numbering of figures: https://tamarisk.it/automatically-numbering-figures-in-markdown/
+
 #### NLP EDA
 
 Then, since we are dealing with questions and answers, I thought it would be useful to investigate how the sentiment of each question impacted the probability of being answered. To this end, I called the SentimentIntensityAnalyzer() from the Natural Language Toolkit (NLTK) to create sentiment scores for each question and answer. 
 
-<img src=".\Plots\3a_answers_sentiment_hist.png" alt="join methods" width="600" style="float: middle;"/>
+<img src=".\Plots\3a_answers_sentiment_hist.png" alt="join methods" width="500" style="float: middle;"/>
 
-<img src=".\Plots\3a_questions_sentiment_hist_answered.png" alt="join methods" width="600" style="float: middle;"/>
+<img src=".\Plots\3a_questions_sentiment_hist_answered.png" alt="join methods" width="500" style="float: middle;"/>
 
 
 
-<img src=".\Plots\3a_questions_sentiment_hist_answered_not.png" alt="join methods" width="600" style="float: middle;"/>
+<img src=".\Plots\3a_questions_sentiment_hist_answered_not.png" alt="join methods" width="500" style="float: middle;"/>
 
 #### A Closer Look at Question and Answer Score Distributions
 
@@ -122,97 +124,88 @@ Another thing I did was look more closely into the histograms of the scores, sin
 
 #### Correlation to Questions Getting Answered
 
-Finally, I looked at the [Pearson coefficients](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) (normalized covariance, looking at how the respective variables relate to `was_answered`). Unfortunately there was only a small amount of correlation and so further modeling using the question sentiment or other numerical variables for prediction was not pursued. Using `answers_sentiment` was a predictor is a non-starter since the only way for an answer to have a sentiment is for it to be answered in the first place.
+Finally, I looked at the [Pearson coefficients](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) (normalized covariance, looking at how the respective variables relate to `was_answered`). Unfortunately there was only a small amount of correlation and so further modeling using the question sentiment or other numerical variables for prediction was not pursued. Using `answers_sentiment` as a predictor is a non-starter since the only way for an answer to have a sentiment is for it to be answered in the first place.
 
-<img src=".\Plots\3a_correlation_numerical_data.png" alt="join methods" width="600" style="float: middle;"/>
+<figure>
+    <img src=".\Plots\3a_correlation_numerical_data.png" alt="join methods" width="600" style="float: middle;"/>
+    <figcaption><bold>xx. </bold> Pearson Coefficients of the numerical data w.r.t. questions getting answered.<figcaption>
+</figure>
 
-*Fig. xx Pearson Coefficients of the numerical data w.r.t. questions getting answered*
+#### Further Investigation into scores
 
-Further Investigation into scores
+##### General Stats for Question and Answer Scores
 
-Looking at distribution of time it takes to answer
+![image-20230601070302807](.\Plots\3b_general_stats_scores.png)
 
-Tag EDA
+##### Answer Scores
 
-- did not end up being very helpful...
+In the following box plot, we can see that not many professionals received upvotes for their answers. Only very small percentage garnered an average answer score above 1. In fact, if we look at the actual counts of the number of the average scores, in the table below the plot, we can see that the majority of answers are not upvoted. This makes sense since only the top answer is usually upvoted in these community-driven forums. Perhaps CareerVillage.com could do better at disseminating answered questions though, since on sites like Stack Overflow, there are more often than not multiple upvotes for good answers. I would be curious to know if CareerVillage.com has a lot of repeated or very similar questions.
+
+
+
+<figure>
+    <img src=".\Plots\3b_average_answ_score_per_professional.png" alt="join methods" width="600" style="float: middle;"/>
+    <figcaption>Fig. xx: Box plot of the average answer score per professional.<figcaption>
+</figure>
+| Answer Score | Count of Answers with Score |
+| :----------- | --------------------------- |
+| 0            | 7346                        |
+| 1            | 2108                        |
+| 2            | 135                         |
+| 3            | 63                          |
+| 4            | 19                          |
+| 5            | 13                          |
+| 6            | 11                          |
+| 7            | 3                           |
+| 8            | 2                           |
+| 9            | 2                           |
+| 10           | 1                           |
+
+
+There are a total of 1017 professionals (out of ~10k) with an average answer score above 1. Only 319 averaged an answer score of 2 or more.
+
+```python
+data.groupby('answers_author_id').mean().sort_values('answers_score', ascending=False).loc[\
+    data.groupby('answers_author_id').mean().sort_values('answers_score', ascending=False)['answers_score'] > 1].shape
+```
+
+`(1017, 7)`
+
+#### Looking at distribution of time it takes to answer
+
+General stats for how long it takes for a question to be answered. As we can see here the mean is 142 days, while the median is 22 days. The average is heavily skewed by the max amount of days it took to answer a question; 2,562, which is about 7 years. This is highly suspicious that a question took 7 years to be answered. Additionally, the min is negative, and an answer to a question can't be posted before it was asked. Since the data was likely auto-generated from the site, it's unlikely it's an imputation error. It may be a merging error due to how messy the data has been in general. The other possibility is that if an answer was posted for a different similar question, it might be linked to the new question (this would have to be confirmed by careervillage.com).
+
+<figure>
+    <img src=".\Plots\3b_general_stats_length_time_answered.png" alt="join methods" width="1000" style="float: middle;"/>
+    <figcaption>Fig. xx: General statistics for the length of time to answering a question.<figcaption>
+</figure>
+
+Taking a look at the histogram of the number of minutes until a question is answered, we see that the majority of questions are answered soon after the question is posted, and then there are slight bumps in answer volume over time.
+
+<figure>
+    <img src=".\Plots\3b_hist_mins_to_answered.png" alt="join methods" width="600" style="float: middle;"/>
+    <figcaption>Fig. xx: General statistics for the length of time to answering a question.<figcaption>
+</figure>
+
+Though not addressed in this analysis, it would be interesting to investigate how a question is phrased impacts the length of time to an initial answer. 
+
+#### Tag EDA
+
+23288 questions out of 23931 (97.31%) have tags related to them. However, I was not able to gain appreciable insight from the tags in the time allotted and continued forward with the other data.
 
 
 
 ## Modeling
 
-un-sampled modeling
+Two sets of modeling notebooks were created for the two different sets of combined data, and the ultimate goal was to predict if a question would be answered or not. Initially, a set of data that contained many duplicates with respect to question ID (since there were questions with multiple answers and tags) was analyzed. This proved to have rather good predictions on the test data, but I was worried that the duplicate sets of information might have crept their way into the training data and skewed the results. To resolve this, a second data set was put together that removed any duplicate question IDs. In order to put this data together though, I had to replace the tag and answer information with simple T/F indications. I also pulled the un-answered questions and sampled the answered questions from this second data set to create an un-biased set of training data.
 
-sampled modeling
+#TODO: remove duplicates from the 4b modeling data. run the un-biased model on the initial set of training data.
 
-### Cleaning
+### Un-sampled modeling
 
-Before conducting EDA and modeling, the data needed to be formatted in a way that won't throw errors. In a combination of initial exploration and later EDA the following steps are needed:
+### Sampled modeling
 
-1. Create Boolean Columns
-2. Converting to Appropriate Data Type
-3. Handling Nulls
-4. Cleaning Text - NLP
-5. Handling Duplicate Values Left Over from Merging
 
-### Creating a "Was Answered" Column
-
-Creating a column called `was_answered`, to indicate if the question was answered. `0` if there is no answer and `1` if there is. 
-
-### Exploring `was_answered` - if the question was answered
-
-An initial look at `was_answered` stats shows that the majority of questions are answered.
-[insert]
-
-We can see that the average question score for where questions weren't answered was 0.75 and when answered 4.9 (the highest score is 125, with most between 0-10). The scores work similar to "upvotes" or "likes", 0 means 0 "upvotes", 5 means 5 "upvotes" etc. This intuitively makes sense, because questions with low or no upvotes are likely to go unanswered.
-
-An interesting thing to note is that the average answers_score is 0.45. Since it uses the same scale as above it looks like the majority of answers aren't getting "upvotes".
-
-In the NLP EDA notebook, I calculated the 'sentiment score' of the questions and answers body. I did this using the Natural Language Toolkit (NLTK) library. The sentiment score parses through the text and awards words a positive or negative score. Words like "like'', "love" or "happy" etc. are attributed to a positive score while "dislike" or "annoyed" etc. are given negative scores. Words like "the '', "it" etc. are considered neutral. NLTK then aggregates a score based on all the words in each passage. Though this is an imperfect approach (i.e. attributing a positive score to "don't like'' or the reverse), it provides a general understanding of the tone of the text.
-
-In the graph below, grouped by 'was_answered', one can see that the average questions_score is relatively similar for questions that were answered and were not answered. Since not all the questions are answered, there are all 0's in the `answers_sentiment` score where `was_answered` is 0.
-
-[insert]
-
-**The scores range from -1 to 1.** With 1 being positive, -1: negative.
-
-### Distribution of Answers Sentiment Scores
-
-The majority of `answers_sentiment` scores are close to 1, with a small bump just below 0. This is good and expected; the point of the platform is to empower and serve youth by answering their career questions. Negative sentiment scores would indicate that the professionals on the platform are not answering kindly, and should be flagged for investigation and possible removal from the platform. That said, humans are much better at dyshering tone from the text, and should be reviewed manually or with further analysis before any action is taken.
-
-#### Graphing Questions Sentiment Scores
-
-Though there is a general trend for questions to have a positive sentiment score, we can see that the distribution of scores varies more than the answer scores.
-
-### Exploring Answers Authors
-
-We wanted to know more about who's answering the questions. Below we're looking at how many people are answering questions and how many questions they're answering.
-
-The total number of unique authors is 10,169.
-[insert]
-
-Professionals average answer score. Below are a few graphs that look top average `answers_score`.
-
-319 out of 10169 professionals have an `answers_score` above 2.0
-1017 out of 10169 professionals have answers_score above 1.0.
-
-#### Exploring Scores
-
-Below is a look at the general stats, grouped by `was_answered` for question and answer scores. Unsurprisingly the average question score for questions that were answered is several points higher than wasn't answered. That said, it's interesting to see that the average score for questions that weren't answered was above 0, or almost zero. In looking at the max `question_score` for questions that weren't answered, we see a question had 123 "upvotes" and still wasn't answered. This is an anomaly, but interesting.
-
-##### General Stats for Question and Answer Scores
-
-The boxplot provides a good visual for how the answer scores and spread. The majority of scores are between 0 and 1. With outliers above about 2. Since there can't be negative scores, there are no outliers to the left of the graph.
-
-The boxplot provides a good visual for how the question scores and spread. The majority of scores are between 2 and 4. With outliers above about 9. There are 75 unique question scores.
-
-[inset]
-
-A deeper dive into the distribution of `questions_scores` shows just how many of the scores are between 0-5, and how few are above 5.
-
-Creating a column called `time_to_answer` that is a calculation of the `answers_date_added` minus `questions_date_added` columns. The data is in date-time units.
-[insert time]
-
-General stats for how long it takes for a question to be answered. As we can see here that the mean is 142 days, while the median is 22 days. The average is heavily skewed by the max amount of days it took to answer a question; 2,562, which is about 7 years. This is highly suspicious that a question took 7 years to be answered. Additionally, the min is negative, and an answer to a question can't be posted before it was asked. Since the data was likely auto-generated from the site, it's unlikely it's an imputation error. It may be a merging error due to how messy the data has been in general. The other possibility is that if an answer was posted for a different similar question, it might be linked to the new question (this would have to be confirmed by careervillage.com).
 
 ## Modeling
 
