@@ -199,7 +199,7 @@ Though not addressed in this analysis, it would be interesting to investigate ho
 
 Two sets of modeling notebooks were created for the two different sets of combined data, and the ultimate goal was to predict if a question would be answered or not. Initially, a set of data that contained many duplicates with respect to question ID (since there were questions with multiple answers and tags) was analyzed. This proved to have rather good predictions on the test data, but I was worried that the duplicate sets of information might have crept their way into the training data and skewed the results. To resolve this, a second data set was put together that removed any duplicate question IDs. In order to put this data together though, I had to replace the tag and answer information with simple T/F indications. I also pulled the un-answered questions and sampled the answered questions from this second data set to create an un-biased set of training data.
 
-#TODO: remove duplicates from the 4b modeling data. run the un-biased model on the initial set of training data.
+#TODO: talk about biased data sets (see 4b modeling notebook)
 
 ### Un-sampled modeling
 
