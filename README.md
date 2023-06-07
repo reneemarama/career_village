@@ -1,13 +1,13 @@
 # Career Village Recommender
 
-Link to kaggle competition: https://www.kaggle.com/c/data-science-for-good-careervillage
-
 [TOC]
 
 ## Problem Statement
 
 "CareerVillage.org is a nonprofit that crowdsources career advice for underserved youth. Founded in 2011 in four classrooms in New York City, the platform has now served career advice from 25,000 volunteer professionals to over 3.5M online learners. The platform uses a Q&A style similar to StackOverflow or Quora to provide students with answers to any question about any career.
 "In this Data Science for Good challenge, CareerVillage.org, in partnership with Google.org, is inviting you to help recommend questions to appropriate volunteers. To support this challenge, CareerVillage.org has supplied five years of data." [1]
+
+*Link to kaggle competition: https://www.kaggle.com/c/data-science-for-good-careervillage*
 
 Due to a lack of time, I did not compete for the original problem statement and instead focused on developing a model to **prompt students with words that are more likely to help them get their questions answered**.
 
@@ -47,7 +47,7 @@ Two models were created, one from un-sampled raw data (the whole data set) and o
 
 ### Sampled Data Random Forest Confusion Matrix:
 
-<img src=".\Plots\sampled_random_forest_confusion_matrix.png" alt="unsampled random forest confustion matrix" width="600" style="float: left;"/>
+<img src=".\Plots\sampled_random_forest_confusion_matrix.png" alt="sampled random forest confustion matrix" width="600" style="float: left;"/>
 
 ### Top 100 words correlated with answered questions
 
@@ -197,59 +197,119 @@ Though not addressed in this analysis, it would be interesting to investigate ho
 
 ## Modeling
 
-Two sets of modeling notebooks were created for the two different sets of combined data, and the ultimate goal was to predict if a question would be answered or not. Initially, a set of data that contained many duplicates with respect to question ID (since there were questions with multiple answers and tags) was analyzed. This proved to have rather good predictions on the test data, but I was worried that the duplicate sets of information might have crept their way into the training data and skewed the results. To resolve this, a second data set was put together that removed any duplicate question IDs. In order to put this data together though, I had to replace the tag and answer information with simple T/F indications. I also pulled the un-answered questions and sampled the answered questions from this second data set to create an un-biased set of training data.
-
-#TODO: talk about biased data sets (see 4b modeling notebook)
+Two sets of modeling notebooks were created for the two different sets of combined data, and the ultimate goal was to predict if a question would be answered or not. Initially, a set of data that contained many duplicates with respect to question ID was analyzed (since there were questions with multiple answers and tags). This proved to make rather good predictions on the test data, but I was worried that the duplicate sets of information might have crept their way into the training data and skewed the results. To resolve this, a second data set was put together that removed any duplicate question IDs. In order to put this data together though, I had to replace the tag and answer information with simple T/F indications. Additionally, I un-biased the training data by including all the un-answered questions and sampling the answered questions to a smaller set. The un-sampled data is 98% answered questions.
 
 ### Un-sampled modeling
 
+The data columns used for modeling in the un-sampled data frame were:
+
+```
+questions_id
+questions_author_id
+questions_date_added
+questions_title
+questions_body
+questions_score
+tag_id
+tag_name
+was_answered
+has_tag
+```
+
+**Random Forest Confusion Matrix Results:**
+
+<img src=".\Plots\unsampled_random_forest_confusion_matrix.png" alt="unsampled random forest confustion matrix" width="600" style="float: left;"/>
+
+**Top 100 Features For Getting a Question Answered**
+
+<img src=".\Plots\4a_top_100_words_answer_yes.png" alt="" width="1000" style="float: left;"/>
+
+**Top Feature is `word_count`**
+
+<img src=".\Plots\4a_top_10_features_answer_yes.png" alt="" width="800" style="float: left;"/>
+
+**Besides Word Count, the next top 10 features (words) have much less impactful coefficient values**
+
+<img src=".\Plots\4a_top_10_features_answer_yes_no_word_count.png" alt="" width="800" style="float: left;"/>
+
+**Bottom 100 Features For Getting a Question to NOT Get Answered**
+
+<img src=".\Plots\4a_top_100_words_answer_no.png" alt="" width="1000" style="float: left;"/>
+
+**Bottom 10 Features and Their Exponential Coefficients**
+
+<img src=".\Plots\4a_top_10_features_answer_no.png" alt="" width="800" style="float: left;"/>
+
 ### Sampled modeling
 
+To better understand the impact of how a question is asked without reams of duplicate data, I built a model to see how well I could predict if a question was answered based on the question text and the question score. I grid-searched over two dataframes with several models.
+
+*Dataframe 1:* In the unsampled model from the notebook "4a_Unsampled_Modeling.ipynb", I performed a grid-search over the whole data frame using `questions_body` and `questions_score` as features. Since the classes were highly unbalanced (answerd vs. un-answered), with a 98% baseline bias, I decided to sample the data to even out the classes. Additionally, I removed duplicate data by removing answer and tag data and replacing them with a "was_answered" and "has_tag" boolean column. Both the `questions_body` and `questions_score` were kept as features.
+
+*Dataframe 2:* In the second dataframe, I used the same sampled dataframe as in "dataframe 1" but dropped the `questions_score` feature, since I hypothesized that `question_score` was a strong indicator of a question being answered. Additionally, it is easier to get real-time feedback on the text of your question, versus waiting for others to up-vote it, in order to increase your chances of the question being answered.
+
+For the first dataframe, I grid-searched over Logistic Regression, K-Nearest Neighbors, and Random Forest, with Random Forest Providing the best results.
+
+In the second dataframe I only used Logistic Regression due to time.
+
+The data columns used for modeling in the sampled data frame were:
+
+```
+questions_id
+questions_author_id
+questions_date_added
+questions_title
+questions_body
+questions_score
+was_answered
+```
+
+Note that `tag_id` is missing from this dataframe since all questions had tags associated due to the rules enforced by CareerVillage.com
+
+**Random Forest Confusion Matrix Results (Dataframe 1):**
+
+<img src=".\Plots\sampled_random_forest_confusion_matrix.png" alt="Sampled random forest confustion matrix" width="600" style="float: left;"/>
+
+**Logistic Regression Confusion Matrix Results (Dataframe 2):**
+
+<img src=".\Plots\4b_sampled_logreg_confusion_matrix.png" alt="sampled logistic regression confustion matrix" width="600" style="float: left;"/>
+
+**Top 100 Features For Getting a Question Answered**
+
+<img src=".\Plots\4b_top_100_words_answer_yes.png" alt="" width="1000" style="float: left;"/>
+
+**Top 10 Features and Their Exponential Coefficients**
+
+<img src=".\Plots\4b_top_10_features_answer_yes.png" alt="" width="800" style="float: left;"/>
+
+**Bottom 100 Features For Getting a Question to NOT Get Answered**
+
+<img src=".\Plots\4b_top_100_words_answer_no.png" alt="" width="1000" style="float: left;"/>
+
+**Bottom 10 Features and Their Exponential Coefficients**
+
+<img src=".\Plots\4b_top_10_features_answer_no.png" alt="" width="800" style="float: left;"/>
 
 
-## Modeling
 
-(For reference on how I prepared the data for modeling, see section on [Modeling Prep](#Modeling-Prep))
+## Recommendations
 
-### Predicting If the Question Was Answered
+In further anyalis, it would be interesting to see how the sentiment score correlates to how quickly a question is answered.
 
-### Baseline Accuracy
+3b_General_EDA.ipynb:    "#TODO : What tags are being answered? Is there a most popular tag? Are the tags they're answering part of their speciality. "
 
-Since most of the questions are answered, the classes are highly unbalanced with a 98% Baseline Accuracy Score.
+1.  looked at how the wording     of the question indicated whether it would be answered or not, how about     looking at how the wording of the question determines how *fast* the     question gets answered?
 
-<span style="color:red">what does un-balanced mean? which data did you model for the Baseline Accuracy Score?</span>
+2. 1. can also look at      the tags used
+   2. can also look into the      sentiment of the questions and how that correlates with how fast they got      answered
 
-#### Unsampled Data
+3. build a model to help match     questions to professionals?
 
-<span style="color:red">plots? why do Logistic Regression first, and on what data?</span>
+4. 1. would have to      look further into what kind of data sets would be useful
 
-For the first model, I grid-searched over Logistic Regression and began a K-Nearest Neighbors but after 8 hrs I terminated the K-Nearest Neighbors kernel in favor of Logistic Regression, which already provided 99% test accuracy (baseline of 98%).
+5. prompt students with better     words, given the type of tags that they employ
 
-#### Sampled Data
-
-To better understand the impact of how the question was asked, I built a model to see how well I could predict if the question was answered. In this notebook, I grid-search over two sampled dataframes with several models.
-
-In the unsampled model from the previous notebook, I grid-search over the whole data frame using `questions_body` and `questions_score` as features. Since the classes were highly unbalanced, 98% baseline score, I decided to sample the data to even out the classes testing to see if I can predict if a question was answered. In the second dataframe, there was the sampled data set, with only `questions_body` as a feature, since I hypothesized that `question_score` was a strong indicator if the question was answered.
-
-For the first dataframe, I grid-search over Logistic Regression, K-Nearest Neighbors, and Random Forest, with Random Forest Providing the Best Results.
-
-In the second dataframe I only used Logicstic Regression due to time.
-
-#### Sampling the Data In Order to Create Even Classes
-
-Since the classes above are so unbalanced I'm only taking a sample of the data were the question was answered. This creates a new baseline accuracy of 53% so we can actually model and test how much impact our features have on being able to predict if the question is answered or not (if we balance the classes the model could just predict was answered every time and would be 98% correct).
-
-#### Confusion Matrix
-
-A confusion matrix provides evaluation metrics that highlight how the model is being accurate and erroneous. The confusion matrix below shows scores from the Random Forest Model which had the best prediction results.
-
-After successfully modeling if a question will be answered or not based on question body and score, I wanted to know how we could predict just on question body since score was a likely tell. Below I modeled using a pipeline and grid-searching with logistic regression. Keep in mind, the below is with the sampled data and balanced classes.
-
-##### Words Most Indicative To The Question Being Answered.
-
-Below I set up and output a dataframe with the coefficients (words most indicative to questions being answered or not answered)
-
-Recommendations
+6. 1. instead of      filtering on answered, look into which questions got answered faster
 
 ## References
 
