@@ -147,6 +147,8 @@ In the following box plot, we can see that not many professionals received upvot
     <img src=".\Plots\3b_average_answ_score_per_professional.png" alt="join methods" width="600" style="float: middle;"/>
     <figcaption>Fig. xx: Box plot of the average answer score per professional.<figcaption>
 </figure>
+
+
 | Answer Score | Count of Answers with Score |
 | :----------- | --------------------------- |
 | 0            | 7346                        |
