@@ -294,22 +294,12 @@ Note that `tag_id` is missing from this dataframe since all questions had tags a
 
 ## Recommendations
 
-In further anyalis, it would be interesting to see how the sentiment score correlates to how quickly a question is answered.
+Due the limitation in time to fully investigate the relationships among the given raw datasets, I would recommend the following activities to further explore how to prompt users to generate questions that are more likely to get answered:
 
-3b_General_EDA.ipynb:    "#TODO : What tags are being answered? Is there a most popular tag? Are the tags they're answering part of their speciality. "
-
-1.  looked at how the wording     of the question indicated whether it would be answered or not, how about     looking at how the wording of the question determines how *fast* the     question gets answered?
-
-2. 1. can also look at      the tags used
-   2. can also look into the      sentiment of the questions and how that correlates with how fast they got      answered
-
-3. build a model to help match     questions to professionals?
-
-4. 1. would have to      look further into what kind of data sets would be useful
-
-5. prompt students with better     words, given the type of tags that they employ
-
-6. 1. instead of      filtering on answered, look into which questions got answered faster
+1. Look at if there are specific tags that correlate with getting answered more frequently; professionals may have tag filters in place.
+2. Look into if the sentiment of the question impacts how quickly it was answered.
+3. Generally look into how quickly questions are answered and if we can predict it given the available features.
+4. Incorporate more of the raw data sets into the analysis.
 
 ## References
 
